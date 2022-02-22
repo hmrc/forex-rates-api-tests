@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,12 +26,19 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 class ForexRatesService extends HttpClient {
-  val host: String                   = TestConfiguration.url("ecb-forex-rss-stub")
-  val getRatesURL: String = s"$host/forex-rates/rates/"
+  val host: String              = TestConfiguration.url("ecb-forex-rss-stub")
+  val getRatesURL: String       = s"$host/forex-rates/rates/"
+  val triggerRssFeedURL: String = s"$host/forex-rates/test-only/retrieve-rates"
 
   def getForexRates(date: String, baseCurrency: String, targetCurrency: String): StandaloneWSRequest#Self#Response =
     Await.result(
       get(s"$getRatesURL/$date/$baseCurrency/$targetCurrency"),
+      10.seconds
+    )
+
+  def triggerRssFeedRetrieval(): StandaloneWSRequest#Self#Response =
+    Await.result(
+      get(triggerRssFeedURL),
       10.seconds
     )
 }

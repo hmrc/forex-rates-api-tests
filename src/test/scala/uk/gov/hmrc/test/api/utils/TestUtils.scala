@@ -14,13 +14,31 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.test.api.models
+package uk.gov.hmrc.test.api.utils
 
-import play.api.libs.json.{Json, OFormat}
+import java.time.format.DateTimeFormatter
+import java.time.{DayOfWeek, LocalDate, ZoneId}
+import java.util.Locale
 
-case class User(firstName: String, lastName: String, nino: String, dateOfBirth: String)
+object TestUtils {
 
-object User {
-  implicit val userJsonFormat: OFormat[User] = Json.format[User]
-  val ninoUser: User                         = User("Luke", "Wood", "EG724113D", "1960-04-06")
+  def getLastWeekday: LocalDate = {
+
+    val today = LocalDate.now()
+
+    if (today.getDayOfWeek == DayOfWeek.SUNDAY) {
+      today.minusDays(2)
+    } else if (today.getDayOfWeek == DayOfWeek.SATURDAY) {
+      today.minusDays(1)
+    } else {
+      today
+    }
+
+  }
+
+  val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter
+    .ofPattern("yyyy-MM-dd")
+    .withLocale(Locale.UK)
+    .withZone(ZoneId.systemDefault())
+
 }

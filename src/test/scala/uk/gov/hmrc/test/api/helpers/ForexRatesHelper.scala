@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@ import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.test.api.models.{ForexRate, User}
 import uk.gov.hmrc.test.api.service.{ForexRatesService, IndividualsMatchingService}
+import uk.gov.hmrc.test.api.utils.ApiLogger._
 
 class ForexRatesHelper {
 
@@ -28,7 +29,20 @@ class ForexRatesHelper {
   def getForexRates(date: String, baseCurrency: String, targetCurrency: String): ForexRate = {
     val forexRatesGetResponse: StandaloneWSRequest#Self#Response =
       forexRatesAPI.getForexRates(date, baseCurrency, targetCurrency)
-    (Json.parse(forexRatesGetResponse.body) \ "date").as[ForexRate]
+    Json.parse(forexRatesGetResponse.body).as[ForexRate]
+  }
+
+  def triggerRssFeedRetrieval(): Boolean = {
+    val response = forexRatesAPI.triggerRssFeedRetrieval()
+
+    if (response.status == 200) {
+      true
+    } else {
+      log.error(
+        s"Unexpected status when calling trigger RSS feed retrieval. Status ${response.status} ${response.body}"
+      )
+      false
+    }
   }
 
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,5 @@ case class ForexRate(date: LocalDate, baseCurrency: String, targetCurrency: Stri
 
 object ForexRate {
   implicit val forexRateJsonFormat: OFormat[ForexRate] = Json.format[ForexRate]
-  val forexRate: ForexRate                         = ForexRate(LocalDate.now(), "GBP", "EUR", 0.85)
+  val forexRate: ForexRate                             = ForexRate(LocalDate.now(), "GBP", "EUR", 0.85)
 }
-
-

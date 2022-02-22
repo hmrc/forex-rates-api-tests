@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,27 +16,32 @@
 
 package uk.gov.hmrc.test.api.specs
 
-import uk.gov.hmrc.test.api.models.User
-import uk.gov.hmrc.test.api.models.User._
+import uk.gov.hmrc.test.api.models.ForexRate
+import uk.gov.hmrc.test.api.utils.TestUtils
 
 class GetRatesSpec extends BaseSpec {
 
-  Feature("Retrieving the Forex Rates via RSS Feed") {
+  Feature("Retrieving Forex Rates") {
 
     Scenario("Get Forex Rates for a specified date") {
 
-      Given("There is an existing individual with a MatchId")
+      Given("The RSS feed has been called today")
 
+      val feedRetrieved = forexRatesHelper.triggerRssFeedRetrieval()
+      feedRetrieved shouldBe true
 
-      val authBearerToken: String    = authHelper.getAuthBearerToken
-      val individualsMatchId: String = testDataHelper.createAnIndividual(authBearerToken, ninoUser)
+      When("I call the last weekday")
 
-      When("I use that MatchId to retrieve the same individuals details")
-      val actualUser: User =
-        individualsMatchingHelper.getIndividualByMatchId(authBearerToken, individualsMatchId)
+      val lastWeekday          = TestUtils.getLastWeekday
+      val forexRate: ForexRate =
+        forexRatesHelper.getForexRates(TestUtils.dateTimeFormatter.format(lastWeekday), "GBP", "EUR")
 
-      Then("I am returned the individuals details")
-      actualUser shouldBe ninoUser
+      Then("I am returned an exchange rate")
+
+      forexRate.date           shouldBe lastWeekday
+      forexRate.baseCurrency   shouldBe "GBP"
+      forexRate.targetCurrency shouldBe "EUR"
+
     }
 
   }
