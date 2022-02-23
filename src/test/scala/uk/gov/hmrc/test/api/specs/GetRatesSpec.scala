@@ -19,7 +19,7 @@ package uk.gov.hmrc.test.api.specs
 import uk.gov.hmrc.test.api.models.ForexRate
 import uk.gov.hmrc.test.api.utils.TestUtils
 
-import java.time.{DayOfWeek, LocalDate}
+import java.time.LocalDate
 
 class GetRatesSpec extends BaseSpec {
 
@@ -68,16 +68,34 @@ class GetRatesSpec extends BaseSpec {
 
       Then("I am returned the matching exchange rates")
 
-      // TODO if we add more tests, put this in a test util
-      val expectedNumberOfRates = dateTo.getDayOfWeek match {
-        case DayOfWeek.MONDAY    => 2
-        case DayOfWeek.TUESDAY   => 2
-        case DayOfWeek.WEDNESDAY => 3
-        case DayOfWeek.THURSDAY  => 4
-        case DayOfWeek.FRIDAY    => 4
-      }
+      forexRates.size shouldBe TestUtils.getExpectedNumberOfRates(dateTo)
 
-      forexRates.size shouldBe expectedNumberOfRates
+    }
+
+    Scenario("Get Forex Rates for a date range not in the database") {
+
+      Given("The RSS feed has been called today")
+
+      val feedRetrieved = forexRatesHelper.triggerRssFeedRetrieval()
+      feedRetrieved shouldBe true
+
+      When("I try to retrieve a date range not in the database")
+
+      val dateTo   = LocalDate.of(2021, 12, 25)
+      val dateFrom = LocalDate.of(2021, 12, 26)
+
+      val forexRates: Seq[ForexRate] =
+        forexRatesHelper.getForexRatesDateRange(
+          TestUtils.dateTimeFormatter.format(dateFrom),
+          TestUtils.dateTimeFormatter.format(dateTo),
+          "EUR",
+          "GBP"
+        )
+
+      Then("I am returned a 200 with no data")
+
+      forexRates.size shouldBe 0
+
     }
 
     Scenario("A 404 is received when trying to retrieve a rate for a weekend day") {
@@ -89,14 +107,7 @@ class GetRatesSpec extends BaseSpec {
 
       When("I call the last weekend date")
 
-      val weekendDate = LocalDate.now().getDayOfWeek match {
-        case DayOfWeek.MONDAY    => LocalDate.now().minusDays(1)
-        case DayOfWeek.TUESDAY   => LocalDate.now().minusDays(2)
-        case DayOfWeek.WEDNESDAY => LocalDate.now().minusDays(3)
-        case DayOfWeek.THURSDAY  => LocalDate.now().minusDays(4)
-        case DayOfWeek.FRIDAY    => LocalDate.now().minusDays(5)
-        case _                   => LocalDate.now()
-      }
+      val weekendDate = TestUtils.getWeekendDate(LocalDate.now())
 
       val response =
         forexRatesHelper.forexRatesAPI

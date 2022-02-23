@@ -43,6 +43,27 @@ object TestUtils {
     lastWeekday.toLocalDate
   }
 
+  def getExpectedNumberOfRates(dateTo: LocalDate): Int =
+    dateTo.getDayOfWeek match {
+      case DayOfWeek.MONDAY    => 2
+      case DayOfWeek.TUESDAY   => 2
+      case DayOfWeek.WEDNESDAY => 3
+      case DayOfWeek.THURSDAY  => 4
+      case DayOfWeek.FRIDAY    => 4
+      case DayOfWeek.SATURDAY  => 3
+      case DayOfWeek.SUNDAY    => 2
+    }
+
+  def getWeekendDate(weekendDate: LocalDate): LocalDate =
+    weekendDate.getDayOfWeek match {
+      case DayOfWeek.MONDAY    => LocalDate.now().minusDays(1)
+      case DayOfWeek.TUESDAY   => LocalDate.now().minusDays(2)
+      case DayOfWeek.WEDNESDAY => LocalDate.now().minusDays(3)
+      case DayOfWeek.THURSDAY  => LocalDate.now().minusDays(4)
+      case DayOfWeek.FRIDAY    => LocalDate.now().minusDays(5)
+      case _                   => LocalDate.now()
+    }
+
   val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter
     .ofPattern("yyyy-MM-dd")
     .withLocale(Locale.UK)
