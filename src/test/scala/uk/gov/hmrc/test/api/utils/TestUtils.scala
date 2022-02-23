@@ -17,23 +17,30 @@
 package uk.gov.hmrc.test.api.utils
 
 import java.time.format.DateTimeFormatter
-import java.time.{DayOfWeek, LocalDate, ZoneId}
+import java.time.{DayOfWeek, LocalDate, LocalDateTime, ZoneId}
 import java.util.Locale
 
 object TestUtils {
 
-  def getLastWeekday: LocalDate = {
+  def getLastWeekdayAfter4pm: LocalDate = {
 
-    val today = LocalDate.now()
+    val today = LocalDateTime.now()
 
-    if (today.getDayOfWeek == DayOfWeek.SUNDAY) {
-      today.minusDays(2)
-    } else if (today.getDayOfWeek == DayOfWeek.SATURDAY) {
+    val lastDayAfter4pm = if (today.getHour < 17) {
       today.minusDays(1)
     } else {
       today
     }
 
+    val lastWeekday = if (lastDayAfter4pm.getDayOfWeek == DayOfWeek.SUNDAY) {
+      lastDayAfter4pm.minusDays(2)
+    } else if (lastDayAfter4pm.getDayOfWeek == DayOfWeek.SATURDAY) {
+      lastDayAfter4pm.minusDays(1)
+    } else {
+      lastDayAfter4pm
+    }
+
+    lastWeekday.toLocalDate
   }
 
   val dateTimeFormatter: DateTimeFormatter = DateTimeFormatter

@@ -27,9 +27,10 @@ class ForexRatesHelper {
   val forexRatesAPI: ForexRatesService = new ForexRatesService
 
   def getForexRates(date: String, baseCurrency: String, targetCurrency: String): ForexRate = {
-    val forexRatesGetResponse: StandaloneWSRequest#Self#Response =
+    val response: StandaloneWSRequest#Self#Response =
       forexRatesAPI.getForexRates(date, baseCurrency, targetCurrency)
-    Json.parse(forexRatesGetResponse.body).as[ForexRate]
+    log.warn(s"Response was status ${response.status} with body ${response.body}")
+    Json.parse(response.body).as[ForexRate]
   }
 
   def triggerRssFeedRetrieval(): Boolean = {

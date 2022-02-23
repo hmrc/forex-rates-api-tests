@@ -26,9 +26,9 @@ import scala.concurrent.Await
 import scala.concurrent.duration._
 
 class ForexRatesService extends HttpClient {
-  val host: String              = TestConfiguration.url("ecb-forex-rss-stub")
-  val getRatesURL: String       = s"$host/forex-rates/rates/"
-  val triggerRssFeedURL: String = s"$host/forex-rates/test-only/retrieve-rates"
+  val host: String              = TestConfiguration.url("forex-rates")
+  val getRatesURL: String       = s"$host/rates"
+  val triggerRssFeedURL: String = s"$host/test-only/retrieve-rates"
 
   def getForexRates(date: String, baseCurrency: String, targetCurrency: String): StandaloneWSRequest#Self#Response =
     Await.result(

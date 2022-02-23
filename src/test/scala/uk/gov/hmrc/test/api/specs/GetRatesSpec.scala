@@ -32,15 +32,15 @@ class GetRatesSpec extends BaseSpec {
 
       When("I call the last weekday")
 
-      val lastWeekday          = TestUtils.getLastWeekday
+      val lastWeekday          = TestUtils.getLastWeekdayAfter4pm
       val forexRate: ForexRate =
-        forexRatesHelper.getForexRates(TestUtils.dateTimeFormatter.format(lastWeekday), "GBP", "EUR")
+        forexRatesHelper.getForexRates(TestUtils.dateTimeFormatter.format(lastWeekday), "EUR", "GBP")
 
       Then("I am returned an exchange rate")
 
       forexRate.date           shouldBe lastWeekday
-      forexRate.baseCurrency   shouldBe "GBP"
-      forexRate.targetCurrency shouldBe "EUR"
+      forexRate.baseCurrency   shouldBe "EUR"
+      forexRate.targetCurrency shouldBe "GBP"
 
     }
 
