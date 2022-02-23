@@ -98,12 +98,13 @@ class GetRatesSpec extends BaseSpec {
         case _                   => LocalDate.now()
       }
 
-      val responseCode: Int =
-        forexRatesHelper.getForexRatesWeekendDate(TestUtils.dateTimeFormatter.format(weekendDate), "EUR", "GBP")
+      val response =
+        forexRatesHelper.forexRatesAPI
+          .getForexRatesSingleDate(TestUtils.dateTimeFormatter.format(weekendDate), "EUR", "GBP")
 
       Then("A 404 response code is returned")
 
-      responseCode shouldBe 404
+      response.status shouldBe 404
 
     }
 
