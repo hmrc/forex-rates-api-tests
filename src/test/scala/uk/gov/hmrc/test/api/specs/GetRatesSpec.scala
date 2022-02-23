@@ -19,7 +19,7 @@ package uk.gov.hmrc.test.api.specs
 import uk.gov.hmrc.test.api.models.ForexRate
 import uk.gov.hmrc.test.api.utils.TestUtils
 
-import java.time.DayOfWeek
+import java.time.{DayOfWeek, LocalDate}
 
 class GetRatesSpec extends BaseSpec {
 
@@ -78,6 +78,33 @@ class GetRatesSpec extends BaseSpec {
       }
 
       forexRates.size shouldBe expectedNumberOfRates
+    }
+
+    Scenario("A 404 is received when trying to retrieve a rate for a weekend day") {
+
+      Given("The RSS feed has been called today")
+
+      val feedRetrieved = forexRatesHelper.triggerRssFeedRetrieval()
+      feedRetrieved shouldBe true
+
+      When("I call the last weekend date")
+
+      val weekendDate = LocalDate.now().getDayOfWeek match {
+        case DayOfWeek.MONDAY    => LocalDate.now().minusDays(1)
+        case DayOfWeek.TUESDAY   => LocalDate.now().minusDays(2)
+        case DayOfWeek.WEDNESDAY => LocalDate.now().minusDays(3)
+        case DayOfWeek.THURSDAY  => LocalDate.now().minusDays(4)
+        case DayOfWeek.FRIDAY    => LocalDate.now().minusDays(5)
+        case _                   => LocalDate.now()
+      }
+
+      val responseCode: Int =
+        forexRatesHelper.getForexRatesWeekendDate(TestUtils.dateTimeFormatter.format(weekendDate), "EUR", "GBP")
+
+      Then("A 404 response code is returned")
+
+      responseCode shouldBe 404
+
     }
 
   }

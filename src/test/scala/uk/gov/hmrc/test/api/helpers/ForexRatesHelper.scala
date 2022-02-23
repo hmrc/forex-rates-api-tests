@@ -45,6 +45,13 @@ class ForexRatesHelper {
     Json.parse(response.body).as[Seq[ForexRate]]
   }
 
+  def getForexRatesWeekendDate(date: String, baseCurrency: String, targetCurrency: String): Int = {
+    val response: StandaloneWSRequest#Self#Response =
+      forexRatesAPI.getForexRatesSingleDate(date, baseCurrency, targetCurrency)
+    log.warn(s"Response was status ${response.status} with body ${response.body}")
+    response.status
+  }
+
   def triggerRssFeedRetrieval(): Boolean = {
     val response = forexRatesAPI.triggerRssFeedRetrieval()
 
