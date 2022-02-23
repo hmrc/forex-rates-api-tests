@@ -16,11 +16,9 @@
 
 package uk.gov.hmrc.test.api.service
 
-import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.test.api.client.HttpClient
 import uk.gov.hmrc.test.api.conf.TestConfiguration
-import uk.gov.hmrc.test.api.models.User
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -30,9 +28,24 @@ class ForexRatesService extends HttpClient {
   val getRatesURL: String       = s"$host/rates"
   val triggerRssFeedURL: String = s"$host/test-only/retrieve-rates"
 
-  def getForexRates(date: String, baseCurrency: String, targetCurrency: String): StandaloneWSRequest#Self#Response =
+  def getForexRatesSingleDate(
+    date: String,
+    baseCurrency: String,
+    targetCurrency: String
+  ): StandaloneWSRequest#Self#Response =
     Await.result(
       get(s"$getRatesURL/$date/$baseCurrency/$targetCurrency"),
+      10.seconds
+    )
+
+  def getForexRatesDateRange(
+    dateFrom: String,
+    dateTo: String,
+    baseCurrency: String,
+    targetCurrency: String
+  ): StandaloneWSRequest#Self#Response =
+    Await.result(
+      get(s"$getRatesURL/$dateFrom/$dateTo/$baseCurrency/$targetCurrency"),
       10.seconds
     )
 

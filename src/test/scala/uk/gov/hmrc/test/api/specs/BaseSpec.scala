@@ -20,11 +20,8 @@ import org.scalatest._
 import org.scalatest.concurrent.Eventually
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
-import uk.gov.hmrc.test.api.helpers.{AuthHelper, ForexRatesHelper, IndividualsMatchingHelper, TestDataHelper}
+import uk.gov.hmrc.test.api.helpers.ForexRatesHelper
 
 trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with BeforeAndAfterAll with Matchers with Eventually {
-  val authHelper                = new AuthHelper
-  val testDataHelper            = new TestDataHelper
-  val individualsMatchingHelper = new IndividualsMatchingHelper
-  val forexRatesHelper          = new ForexRatesHelper
+  val forexRatesHelper = new ForexRatesHelper
 }

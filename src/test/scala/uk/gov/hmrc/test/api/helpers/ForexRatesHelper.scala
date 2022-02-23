@@ -19,16 +19,28 @@ package uk.gov.hmrc.test.api.helpers
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.test.api.models.{ForexRate, User}
-import uk.gov.hmrc.test.api.service.{ForexRatesService, IndividualsMatchingService}
+import uk.gov.hmrc.test.api.service.ForexRatesService
 import uk.gov.hmrc.test.api.utils.ApiLogger._
 
 class ForexRatesHelper {
 
   val forexRatesAPI: ForexRatesService = new ForexRatesService
 
-  def getForexRates(date: String, baseCurrency: String, targetCurrency: String): ForexRate = {
+  def getForexRatesSingleDate(date: String, baseCurrency: String, targetCurrency: String): ForexRate = {
     val response: StandaloneWSRequest#Self#Response =
-      forexRatesAPI.getForexRates(date, baseCurrency, targetCurrency)
+      forexRatesAPI.getForexRatesSingleDate(date, baseCurrency, targetCurrency)
+    log.warn(s"Response was status ${response.status} with body ${response.body}")
+    Json.parse(response.body).as[ForexRate]
+  }
+
+  def getForexRatesDateRange(
+    dateFrom: String,
+    dateTo: String,
+    baseCurrency: String,
+    targetCurrency: String
+  ): ForexRate = {
+    val response: StandaloneWSRequest#Self#Response =
+      forexRatesAPI.getForexRatesDateRange(dateFrom, dateTo, baseCurrency, targetCurrency)
     log.warn(s"Response was status ${response.status} with body ${response.body}")
     Json.parse(response.body).as[ForexRate]
   }
