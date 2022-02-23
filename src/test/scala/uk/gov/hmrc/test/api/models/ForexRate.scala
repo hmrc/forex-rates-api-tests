@@ -24,5 +24,4 @@ case class ForexRate(date: LocalDate, baseCurrency: String, targetCurrency: Stri
 
 object ForexRate {
   implicit val forexRateJsonFormat: OFormat[ForexRate] = Json.format[ForexRate]
-  val forexRate: ForexRate                             = ForexRate(LocalDate.now(), "GBP", "EUR", 0.85)
 }

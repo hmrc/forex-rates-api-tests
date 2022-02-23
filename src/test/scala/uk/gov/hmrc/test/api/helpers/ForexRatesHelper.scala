@@ -18,7 +18,7 @@ package uk.gov.hmrc.test.api.helpers
 
 import play.api.libs.json.Json
 import play.api.libs.ws.StandaloneWSRequest
-import uk.gov.hmrc.test.api.models.{ForexRate, User}
+import uk.gov.hmrc.test.api.models.ForexRate
 import uk.gov.hmrc.test.api.service.ForexRatesService
 import uk.gov.hmrc.test.api.utils.ApiLogger._
 
@@ -38,11 +38,11 @@ class ForexRatesHelper {
     dateTo: String,
     baseCurrency: String,
     targetCurrency: String
-  ): ForexRate = {
+  ): Seq[ForexRate] = {
     val response: StandaloneWSRequest#Self#Response =
       forexRatesAPI.getForexRatesDateRange(dateFrom, dateTo, baseCurrency, targetCurrency)
-    log.warn(s"Response was status ${response.status} with body ${response.body}")
-    Json.parse(response.body).as[ForexRate]
+    log.warn(s"Response was status ${response.status} with body ${response.body} and from: $dateFrom to: $dateTo")
+    Json.parse(response.body).as[Seq[ForexRate]]
   }
 
   def triggerRssFeedRetrieval(): Boolean = {

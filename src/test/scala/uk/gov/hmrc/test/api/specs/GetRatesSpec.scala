@@ -19,6 +19,8 @@ package uk.gov.hmrc.test.api.specs
 import uk.gov.hmrc.test.api.models.ForexRate
 import uk.gov.hmrc.test.api.utils.TestUtils
 
+import java.time.DayOfWeek
+
 class GetRatesSpec extends BaseSpec {
 
   Feature("Retrieving Forex Rates") {
@@ -53,10 +55,10 @@ class GetRatesSpec extends BaseSpec {
 
       When("I retrieve a date range")
 
-      val dateFrom = TestUtils.getLastWeekdayAfter4pm
-      val dateTo   = dateFrom.minusDays(3)
+      val dateTo   = TestUtils.getLastWeekdayAfter4pm
+      val dateFrom = dateTo.minusDays(3)
 
-      val forexRate: ForexRate =
+      val forexRates: Seq[ForexRate] =
         forexRatesHelper.getForexRatesDateRange(
           TestUtils.dateTimeFormatter.format(dateFrom),
           TestUtils.dateTimeFormatter.format(dateTo),
@@ -66,10 +68,16 @@ class GetRatesSpec extends BaseSpec {
 
       Then("I am returned the matching exchange rates")
 
-//      forexRate.date           shouldBe lastWeekday
-//      forexRate.baseCurrency   shouldBe "EUR"
-//      forexRate.targetCurrency shouldBe "GBP"
+      // TODO if we add more tests, put this in a test util
+      val expectedNumberOfRates = dateTo.getDayOfWeek match {
+        case DayOfWeek.MONDAY    => 2
+        case DayOfWeek.TUESDAY   => 2
+        case DayOfWeek.WEDNESDAY => 3
+        case DayOfWeek.THURSDAY  => 4
+        case DayOfWeek.FRIDAY    => 4
+      }
 
+      forexRates.size shouldBe expectedNumberOfRates
     }
 
   }
