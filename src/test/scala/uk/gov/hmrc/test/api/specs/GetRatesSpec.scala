@@ -25,52 +25,9 @@ class GetRatesSpec extends BaseSpec {
 
   Feature("Retrieving Forex Rates") {
 
-    Scenario("Get Forex Rates for a single specified date") {
+    singleDateBasicScenario()
 
-      Given("The RSS feed has been called today")
-
-      val feedRetrieved = forexRatesHelper.triggerRssFeedRetrieval()
-      feedRetrieved shouldBe true
-
-      When("I call the last weekday")
-
-      val lastWeekday          = TestUtils.getLastWeekdayAfter4pm
-      val forexRate: ForexRate =
-        forexRatesHelper.getForexRatesSingleDate(TestUtils.dateTimeFormatter.format(lastWeekday), "EUR", "GBP")
-
-      Then("I am returned an exchange rate")
-
-      forexRate.date           shouldBe lastWeekday
-      forexRate.baseCurrency   shouldBe "EUR"
-      forexRate.targetCurrency shouldBe "GBP"
-
-    }
-
-    Scenario("Get Forex Rates for a specified date range") {
-
-      Given("The RSS feed has been called today")
-
-      val feedRetrieved = forexRatesHelper.triggerRssFeedRetrieval()
-      feedRetrieved shouldBe true
-
-      When("I retrieve a date range")
-
-      val dateTo   = TestUtils.getLastWeekdayAfter4pm
-      val dateFrom = dateTo.minusDays(3)
-
-      val forexRates: Seq[ForexRate] =
-        forexRatesHelper.getForexRatesDateRange(
-          TestUtils.dateTimeFormatter.format(dateFrom),
-          TestUtils.dateTimeFormatter.format(dateTo),
-          "EUR",
-          "GBP"
-        )
-
-      Then("I am returned the matching exchange rates")
-
-      forexRates.size shouldBe TestUtils.getExpectedNumberOfRates(dateTo)
-
-    }
+    dateRangeBasicScenario()
 
     Scenario("Get Forex Rates for a date range not in the database") {
 
