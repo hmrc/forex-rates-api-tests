@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,10 +20,8 @@ import org.scalatest._
 import org.scalatest.concurrent.Eventually
 import org.scalatest.featurespec.AnyFeatureSpec
 import org.scalatest.matchers.should.Matchers
-import uk.gov.hmrc.test.api.helpers.{AuthHelper, IndividualsMatchingHelper, TestDataHelper}
+import uk.gov.hmrc.test.api.helpers.ForexRatesHelper
 
 trait BaseSpec extends AnyFeatureSpec with GivenWhenThen with BeforeAndAfterAll with Matchers with Eventually {
-  val authHelper                = new AuthHelper
-  val testDataHelper            = new TestDataHelper
-  val individualsMatchingHelper = new IndividualsMatchingHelper
+  val forexRatesHelper = new ForexRatesHelper
 }

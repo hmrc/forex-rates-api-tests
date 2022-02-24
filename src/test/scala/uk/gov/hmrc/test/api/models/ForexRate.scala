@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 HM Revenue & Customs
+ * Copyright 2022 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,14 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.test.api.helpers
+package uk.gov.hmrc.test.api.models
 
-import org.scalatest.Assertions.fail
-import play.api.libs.ws.StandaloneWSRequest
-import uk.gov.hmrc.test.api.service.AuthService
+import play.api.libs.json.{Json, OFormat}
 
-class AuthHelper {
+import java.time.LocalDate
 
-  val authAPI: AuthService = new AuthService
+case class ForexRate(date: LocalDate, baseCurrency: String, targetCurrency: String, value: BigDecimal)
 
-  def getAuthBearerToken: String = {
-    val authServiceRequestResponse: StandaloneWSRequest#Self#Response = authAPI.postLogin
-    authServiceRequestResponse.header("Authorization").getOrElse(fail("Could not obtain auth bearer token"))
-  }
+object ForexRate {
+  implicit val forexRateJsonFormat: OFormat[ForexRate] = Json.format[ForexRate]
 }
