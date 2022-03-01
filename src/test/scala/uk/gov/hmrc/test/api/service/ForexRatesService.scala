@@ -56,8 +56,11 @@ class ForexRatesService extends HttpClient {
       10.seconds
     )
 
-  private def getWithProxyIfEnabled(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] = {
-    if(Zap.enabled) {
+  private def getWithProxyIfEnabled(
+    url: String,
+    headers: (String, String)*
+  ): Future[StandaloneWSRequest#Self#Response] =
+    if (Zap.enabled) {
       wsClient
         .url(url)
         .withHttpHeaders(headers: _*)
@@ -66,5 +69,4 @@ class ForexRatesService extends HttpClient {
     } else {
       get(url, headers: _*)
     }
-  }
 }
