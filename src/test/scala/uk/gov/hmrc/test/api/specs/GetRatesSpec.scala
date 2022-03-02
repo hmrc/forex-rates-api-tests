@@ -38,8 +38,8 @@ class GetRatesSpec extends BaseSpec {
 
       When("I try to retrieve a date range not in the database")
 
-      val dateTo   = LocalDate.of(2021, 12, 25)
-      val dateFrom = LocalDate.of(2021, 12, 26)
+      val dateFrom = LocalDate.of(2021, 12, 25)
+      val dateTo   = LocalDate.of(2021, 12, 26)
 
       val forexRates: Seq[ForexRate] =
         forexRatesHelper.getForexRatesDateRange(
@@ -73,6 +73,54 @@ class GetRatesSpec extends BaseSpec {
       Then("A 404 response code is returned")
 
       response.status shouldBe 404
+
+    }
+
+    Scenario("A 400 is received when trying to retrieve a rate where dateTo is before dateFrom") {
+
+      Given("The RSS feed has been called today")
+
+      val feedRetrieved = forexRatesHelper.triggerRssFeedRetrieval()
+      feedRetrieved shouldBe true
+
+      When("I try to retrieve a date range where dateTo is before dateFrom")
+
+      val dateFrom = LocalDate.now()
+      val dateTo   = LocalDate.now().minusDays(5)
+
+      val response =
+        forexRatesHelper.forexRatesAPI
+          .getForexRatesDateRange(
+            TestUtils.dateTimeFormatter.format(dateFrom),
+            TestUtils.dateTimeFormatter.format(dateTo),
+            "EUR",
+            "GBP"
+          )
+
+      Then("A 400 response code is returned")
+
+      response.status shouldBe 400
+      response.body.eq("DateTo cannot be before DateFrom")
+    }
+
+    Scenario("Forex Rates are retrieved when using inverse currency rates") {
+
+      Given("The RSS feed has been called today")
+
+      val feedRetrieved = forexRatesHelper.triggerRssFeedRetrieval()
+      feedRetrieved shouldBe true
+
+      When("I call the last weekday with inverse currency rates")
+
+      val lastWeekday          = TestUtils.getLastWeekdayAfter4pm
+      val forexRate: ForexRate =
+        forexRatesHelper.getForexRatesSingleDate(TestUtils.dateTimeFormatter.format(lastWeekday), "GBP", "EUR")
+
+      Then("I am returned an exchange rate")
+
+      forexRate.date           shouldBe lastWeekday
+      forexRate.baseCurrency   shouldBe "GBP"
+      forexRate.targetCurrency shouldBe "EUR"
 
     }
 
