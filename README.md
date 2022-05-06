@@ -19,7 +19,7 @@ You then should be running 4.0 with a replica set. You may have to re-run the rs
 
 Service Manager:
 ```
-sm --start ONE_STOP_SHOP_ALL -r
+sm --start FOREX_RATES_ALL -r
 ```
 If running a branch of forex-rates locally, use the following command in the terminal:
 ```
