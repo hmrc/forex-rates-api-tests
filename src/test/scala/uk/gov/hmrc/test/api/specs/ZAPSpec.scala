@@ -16,11 +16,6 @@
 
 package uk.gov.hmrc.test.api.specs
 
-import uk.gov.hmrc.test.api.models.ForexRate
-import uk.gov.hmrc.test.api.utils.TestUtils
-
-import java.time.LocalDate
-
 class ZAPSpec extends BaseSpec {
 
   Feature("ZAP Retrieving Forex Rates") {
