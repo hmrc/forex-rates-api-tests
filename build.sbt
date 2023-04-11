@@ -4,7 +4,7 @@ lazy val testSuite = (project in file("."))
   .settings(
     name := "forex-rates-api-tests",
     version := "0.1.0",
-    scalaVersion := "2.12.12",
+    scalaVersion := "2.13.8",
     scalacOptions ++= Seq("-feature"),
     libraryDependencies ++= Dependencies.test
   )
