@@ -56,7 +56,7 @@ class ForexRatesService extends HttpClient {
       10.seconds
     )
 
-  private def ggetWithProxyIfEnabled(
+  private def getWithProxyIfEnabled(
     url: String,
     headers: (String, String)*
   ): Future[StandaloneWSRequest#Self#Response] =
