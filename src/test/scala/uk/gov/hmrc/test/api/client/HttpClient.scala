@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ trait HttpClient {
     wsClient
       .url(url)
       .withHttpHeaders(headers: _*)
-      .get
+      .get()
 
   def post(url: String, bodyAsJson: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
     wsClient
@@ -45,5 +45,5 @@ trait HttpClient {
     wsClient
       .url(url)
       .withHttpHeaders(headers: _*)
-      .delete
+      .delete()
 }
