@@ -27,7 +27,7 @@ class ForexRatesHelper {
   val forexRatesAPI: ForexRatesService = new ForexRatesService
 
   def getForexRatesSingleDate(date: String, baseCurrency: String, targetCurrency: String): ForexRate = {
-    val response: StandaloneWSRequest#Self#Response =
+    val response =
       forexRatesAPI.getForexRatesSingleDate(date, baseCurrency, targetCurrency)
     log.warn(s"Response was status ${response.status} with body ${response.body}")
     Json.parse(response.body).as[ForexRate]
@@ -39,7 +39,7 @@ class ForexRatesHelper {
     baseCurrency: String,
     targetCurrency: String
   ): Seq[ForexRate] = {
-    val response: StandaloneWSRequest#Self#Response =
+    val response =
       forexRatesAPI.getForexRatesDateRange(dateFrom, dateTo, baseCurrency, targetCurrency)
     log.warn(s"Response was status ${response.status} with body ${response.body} and from: $dateFrom to: $dateTo")
     Json.parse(response.body).as[Seq[ForexRate]]

@@ -33,7 +33,7 @@ class ForexRatesService extends HttpClient {
     date: String,
     baseCurrency: String,
     targetCurrency: String
-  ): StandaloneWSRequest#Self#Response =
+  ) =
     Await.result(
       getWithProxyIfEnabled(s"$getRatesURL/$date/$baseCurrency/$targetCurrency"),
       10.seconds
@@ -44,13 +44,13 @@ class ForexRatesService extends HttpClient {
     dateTo: String,
     baseCurrency: String,
     targetCurrency: String
-  ): StandaloneWSRequest#Self#Response =
+  ) =
     Await.result(
       getWithProxyIfEnabled(s"$getRatesURL/$dateFrom/$dateTo/$baseCurrency/$targetCurrency"),
       10.seconds
     )
 
-  def triggerRssFeedRetrieval(): StandaloneWSRequest#Self#Response =
+  def triggerRssFeedRetrieval() =
     Await.result(
       getWithProxyIfEnabled(triggerRssFeedURL),
       10.seconds
@@ -59,7 +59,7 @@ class ForexRatesService extends HttpClient {
   private def getWithProxyIfEnabled(
     url: String,
     headers: (String, String)*
-  ): Future[StandaloneWSRequest#Self#Response] =
+  ) =
     if (Zap.enabled) {
       wsClient
         .url(url)

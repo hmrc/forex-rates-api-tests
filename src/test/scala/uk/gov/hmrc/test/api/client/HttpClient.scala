@@ -29,19 +29,19 @@ trait HttpClient {
   val wsClient: StandaloneAhcWSClient   = StandaloneAhcWSClient()
   implicit val ec: ExecutionContext     = ExecutionContext.global
 
-  def get(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def get(url: String, headers: (String, String)*) =
     wsClient
       .url(url)
       .withHttpHeaders(headers: _*)
       .get()
 
-  def post(url: String, bodyAsJson: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def post(url: String, bodyAsJson: String, headers: (String, String)*) =
     wsClient
       .url(url)
       .withHttpHeaders(headers: _*)
       .post(bodyAsJson)
 
-  def delete(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def delete(url: String, headers: (String, String)*) =
     wsClient
       .url(url)
       .withHttpHeaders(headers: _*)
