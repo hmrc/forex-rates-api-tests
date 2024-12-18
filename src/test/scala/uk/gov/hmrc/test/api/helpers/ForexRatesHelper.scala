@@ -17,7 +17,6 @@
 package uk.gov.hmrc.test.api.helpers
 
 import play.api.libs.json.Json
-import play.api.libs.ws.StandaloneWSRequest
 import uk.gov.hmrc.test.api.models.ForexRate
 import uk.gov.hmrc.test.api.service.ForexRatesService
 import uk.gov.hmrc.test.api.utils.ApiLogger._

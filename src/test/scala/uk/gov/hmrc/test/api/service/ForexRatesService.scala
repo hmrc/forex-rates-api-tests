@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.test.api.service
 
-import play.api.libs.ws.{DefaultWSProxyServer, StandaloneWSRequest}
+import play.api.libs.ws.DefaultWSProxyServer
 import uk.gov.hmrc.test.api.client.HttpClient
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 import uk.gov.hmrc.test.api.utils.Zap
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 
 class ForexRatesService extends HttpClient {
@@ -63,10 +63,10 @@ class ForexRatesService extends HttpClient {
     if (Zap.enabled) {
       wsClient
         .url(url)
-        .withHttpHeaders(headers: _*)
+        .withHttpHeaders(headers*)
         .withProxyServer(DefaultWSProxyServer("localhost", 11000))
         .get()
     } else {
-      get(url, headers: _*)
+      get(url, headers*)
     }
 }
