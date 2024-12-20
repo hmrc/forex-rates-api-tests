@@ -16,12 +16,12 @@
 
 package uk.gov.hmrc.test.api.service
 
-import play.api.libs.ws.{DefaultWSProxyServer, StandaloneWSRequest}
+import play.api.libs.ws.DefaultWSProxyServer
 import uk.gov.hmrc.test.api.client.HttpClient
 import uk.gov.hmrc.test.api.conf.TestConfiguration
 import uk.gov.hmrc.test.api.utils.Zap
 
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Await
 import scala.concurrent.duration._
 
 class ForexRatesService extends HttpClient {
@@ -33,7 +33,7 @@ class ForexRatesService extends HttpClient {
     date: String,
     baseCurrency: String,
     targetCurrency: String
-  ): StandaloneWSRequest#Self#Response =
+  ) =
     Await.result(
       getWithProxyIfEnabled(s"$getRatesURL/$date/$baseCurrency/$targetCurrency"),
       10.seconds
@@ -44,13 +44,13 @@ class ForexRatesService extends HttpClient {
     dateTo: String,
     baseCurrency: String,
     targetCurrency: String
-  ): StandaloneWSRequest#Self#Response =
+  ) =
     Await.result(
       getWithProxyIfEnabled(s"$getRatesURL/$dateFrom/$dateTo/$baseCurrency/$targetCurrency"),
       10.seconds
     )
 
-  def triggerRssFeedRetrieval(): StandaloneWSRequest#Self#Response =
+  def triggerRssFeedRetrieval() =
     Await.result(
       getWithProxyIfEnabled(triggerRssFeedURL),
       10.seconds
@@ -59,14 +59,14 @@ class ForexRatesService extends HttpClient {
   private def getWithProxyIfEnabled(
     url: String,
     headers: (String, String)*
-  ): Future[StandaloneWSRequest#Self#Response] =
+  ) =
     if (Zap.enabled) {
       wsClient
         .url(url)
-        .withHttpHeaders(headers: _*)
+        .withHttpHeaders(headers*)
         .withProxyServer(DefaultWSProxyServer("localhost", 11000))
         .get()
     } else {
-      get(url, headers: _*)
+      get(url, headers*)
     }
 }

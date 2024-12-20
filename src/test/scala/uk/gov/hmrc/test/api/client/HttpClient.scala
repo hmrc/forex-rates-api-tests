@@ -18,10 +18,9 @@ package uk.gov.hmrc.test.api.client
 
 import akka.actor.ActorSystem
 import play.api.libs.ws.DefaultBodyWritables._
-import play.api.libs.ws.StandaloneWSRequest
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.ExecutionContext
 
 trait HttpClient {
 
@@ -29,21 +28,21 @@ trait HttpClient {
   val wsClient: StandaloneAhcWSClient   = StandaloneAhcWSClient()
   implicit val ec: ExecutionContext     = ExecutionContext.global
 
-  def get(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def get(url: String, headers: (String, String)*) =
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .get()
 
-  def post(url: String, bodyAsJson: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def post(url: String, bodyAsJson: String, headers: (String, String)*) =
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .post(bodyAsJson)
 
-  def delete(url: String, headers: (String, String)*): Future[StandaloneWSRequest#Self#Response] =
+  def delete(url: String, headers: (String, String)*) =
     wsClient
       .url(url)
-      .withHttpHeaders(headers: _*)
+      .withHttpHeaders(headers*)
       .delete()
 }
